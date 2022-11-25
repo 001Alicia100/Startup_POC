@@ -77,6 +77,7 @@ public class AuthController {
                     if(isPasswordMatch){
                         Optional<User> user=userRepository.findById(isUserExist.get(0).getId());
                         user.get().setLoginAttemptCount(0);
+                        String role = user.get().getRoles().iterator().next().getName().name();
                         userRepository.save(user.get());
                         Authentication authentication = authenticationManager.authenticate(
                                 new UsernamePasswordAuthenticationToken(
@@ -84,17 +85,14 @@ public class AuthController {
                                         loginRequest.getPassword()
                                 )
                         );
-
                         SecurityContextHolder.getContext().setAuthentication(authentication);
-
                         String jwt = tokenProvider.generateToken(authentication);
-                        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
+                        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, role));
                     }else {
                         loginAttempt = loginAttempt +1;
                         Optional<User> user=userRepository.findById(isUserExist.get(0).getId());
                         user.get().setLoginAttemptCount(loginAttempt);
                         userRepository.save(user.get());
-
                         return ResponseEntity.ok(new ApiResponse(false,"","You have entered an invalid user name or password ."));
                     }
                 }

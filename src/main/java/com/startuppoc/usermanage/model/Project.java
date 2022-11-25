@@ -1,5 +1,6 @@
 package com.startuppoc.usermanage.model;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -17,23 +18,13 @@ public class Project {
     private String title;
     
     @NotBlank
-    private String desc_projet;
-    
-    @NotBlank
-    private String desc_entreprise;
-    
-    @NotBlank
-    private String annee;
-    
-    private String lien_site;
-    
-    @NotBlank
-    private String categorie;
+    private String description;
 
-    private ArrayList<String> listTech;
-    
-    @Size(max = 65)
-    private String photos;
+    private ArrayList<Long> managers;
+
+    private ArrayList<Long> users;
+
+    private Date startingDate;
 
 	public Long getId() {
 		return id;
@@ -51,51 +42,35 @@ public class Project {
 		this.title = title;
 	}
 
-	public String getDesc_projet() {
-		return desc_projet;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setDesc_projet(String desc_projet) {
-		this.desc_projet = desc_projet;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
-	public String getDesc_entreprise() {
-		return desc_entreprise;
+	public ArrayList<Long> getManagers() {
+		return managers;
 	}
 
-	public void setDesc_entreprise(String desc_entreprise) {
-		this.desc_entreprise = desc_entreprise;
+	public void setManagers(ArrayList<Long> managers) {
+		this.managers = managers;
 	}
 
-	public String getAnnee() {
-		return annee;
+	public ArrayList<Long> getUsers() {
+		return users;
 	}
 
-	public void setAnnee(String annee) {
-		this.annee = annee;
+	public void setUsers(ArrayList<Long> users) {
+		this.users = users;
 	}
 
-	public String getLien_site() {
-		return lien_site;
+	public Date getStartingDate() {
+		return startingDate;
 	}
 
-	public void setLien_site(String lien_site) {
-		this.lien_site = lien_site;
+	public void setStartingDate(Date startingDate) {
+		this.startingDate = startingDate;
 	}
-
-	public String getCategorie() {
-		return categorie;
-	}
-
-	public void setCategorie(String categorie) {
-		this.categorie = categorie;
-	}
-
-	public String getPhotos() {
-		return photos;
-	}
-
-	public void setPhotos(String photos) {
-		this.photos = photos;
-	}  
 }

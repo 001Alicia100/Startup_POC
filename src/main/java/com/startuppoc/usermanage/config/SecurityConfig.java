@@ -90,7 +90,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .antMatchers("/api/user/checkUsernameAvailability", "/api/user/checkEmailAvailability")
                 .permitAll()
-                .antMatchers("/api/user/get-all-locked-account","/api/user/get-all-pending-account","/api/user/unlock_account_by_id","/api/user/activate_pending_account_by_id")
+                .antMatchers("/api/user/get-all-users", "/api/user/get-all-locked-account","/api/user/get-all-pending-account","/api/user/lock_account_by_id", "/api/user/unlock_account_by_id","/api/user/activate_pending_account_by_id")
                 .hasAuthority(String.valueOf(ROLE_ADMIN))
                 .antMatchers("/api/user/edit","/api/user/delete", "/api/project/**")
                 .hasAnyAuthority(String.valueOf(ROLE_ADMIN),String.valueOf(ROLE_USER_MANAGE))

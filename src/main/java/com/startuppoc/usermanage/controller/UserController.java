@@ -15,12 +15,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.startuppoc.usermanage.model.RoleName.ROLE_ADMIN;
 import static com.startuppoc.usermanage.model.RoleName.ROLE_VIEW;
+import static com.startuppoc.usermanage.model.RoleName.ROLE_USER_MANAGE;;
 
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -76,6 +79,19 @@ public class UserController {
         }
 
     }
+    
+    @PostMapping("/lock_account_by_id")
+    public ResponseEntity<?> lockAccount(@RequestBody User users){
+        try {
+            Optional<User> user= userRepository.findById(users.getId());
+            user.get().setLoginAttemptCount(3);
+            userRepository.save(user.get());
+            return ResponseEntity.ok(new ApiResponse(true,"","Successfully account locked"));
+        }catch (Exception e){
+            return ResponseEntity.ok(new ApiResponse(false,"",e.getMessage()));
+        }
+
+    }
 
     @PostMapping("/activate_pending_account_by_id")
     public ResponseEntity<?> activatePendingAccountById(@RequestBody User users){
@@ -90,6 +106,38 @@ public class UserController {
 
     }
 
+    @GetMapping("/get-all-users")
+    public ResponseEntity<?> getAllUsers(){
+        try {
+            List<User> user= userRepository.findAll();
+            Optional<Role> role_view= roleRepository.findByName(ROLE_VIEW);
+            List<User> users = user.stream().filter(x-> {
+                return x.getRoles().stream().allMatch(y-> y.getId() ==role_view.get().getId());
+            }).collect(Collectors.toList());
+           
+            Optional<Role> role_user_manage= roleRepository.findByName(ROLE_USER_MANAGE);
+            List<User> managers = user.stream().filter(x-> {
+                return x.getRoles().stream().allMatch(y-> y.getId() ==role_user_manage.get().getId());
+            }).collect(Collectors.toList());
+           
+            Optional<Role> role_admin= roleRepository.findByName(ROLE_ADMIN);
+            List<User> admins = user.stream().filter(x-> {
+                return x.getRoles().stream().allMatch(y-> y.getId() ==role_admin.get().getId());
+            }).collect(Collectors.toList());
+            
+
+            List<List<User>> result = new ArrayList<>();
+            result.add(users);
+            result.add(managers);
+            result.add(admins);
+            
+            return ResponseEntity.ok(new ApiResponse(true,result,"Successfully data retrieved"));
+        }catch (Exception e){
+            return ResponseEntity.ok(new ApiResponse(false,"",e.getMessage()));
+        }
+
+    }
+    
     @GetMapping("/get-all-user")
     public ResponseEntity<?> getAllUserWithPublicAccess(){
         try {
